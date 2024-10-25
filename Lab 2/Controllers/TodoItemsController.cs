@@ -77,8 +77,16 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
+            if (todoItem.CompletionDate == null)
+            {
+                todoItem.CompletionDate = DateTime.Now;  // Optional: You could set a default value if needed
+            }
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
+
+            // Output completionDate to console for debug (optional)
+            Console.WriteLine("Created TodoItem with completionDate: " + todoItem.CompletionDate);
 
             //    return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
             return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
